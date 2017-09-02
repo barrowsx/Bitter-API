@@ -2,11 +2,15 @@ class UsersController < ApplicationController
   skip_before_action :authenticate
 
   def create
-    user = User.new(user_params)
-    if user.save
-      render json: {message: "user created successfully"}, status: :ok
+    new_user = User.new(user_params)
+    taken_names = User.all.map do |user|
+      user.name
+    end
+    if !taken_names.include?(new_user.name)
+      new_user.save
+      render json: {message: "User #{new_user.name} created."}, status: :ok
     else
-      render json: {}, status: :unauthorized
+      render json: {message: "Couldn't create new user #{new_user.name}"}, status: :unauthorized
     end
   end
 

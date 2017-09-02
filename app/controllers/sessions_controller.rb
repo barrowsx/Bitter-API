@@ -4,7 +4,7 @@ class SessionsController < ApplicationController
   def create
     user = User.find_by(name: auth_params[:name])
     if user && user.authenticate(auth_params[:password])
-      jwt = Auth.issue({user: user.id})
+      jwt = Auth.issue({user: user.id}, Time.now.to_i + 3600)
       render json: {jwt: jwt}
     else
       render json: {message: 'invalid credentials'}

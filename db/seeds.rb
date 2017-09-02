@@ -6,15 +6,15 @@
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
 
-99.times do |n|
-  name = Faker::Internet.user_name
+50.times do |n|
+  name = Faker::Internet.user_name(2..10)
   password = "Password"
   User.create!(name: name, password: password, password_confirmation: password)
 end
 
-users = User.order(:created_at).take(6)
-50.times do
-  content = Faker::Lorem.sentence(5)
+users = User.order(:created_at)
+2.times do
+  content = Faker::Overwatch.quote
   users.each do |user|
     user.posts.create!(content: content)
   end

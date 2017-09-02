@@ -6,11 +6,14 @@ class ApplicationController < ActionController::API
   end
 
   def current_user
-    if auth_present?
+    # byebug
+    if auth_present? && auth != nil
       user = User.find(auth["user"])
       if user
         @current_user ||= user
       end
+    else
+      false
     end
   end
 
