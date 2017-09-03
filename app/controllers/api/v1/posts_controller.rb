@@ -4,8 +4,12 @@ class Api::V1::PostsController < ApplicationController
   def index
     @posts = Post.all
     post_data = @posts.each_with_object([]) do |post, new_array|
-      new_array << {id: post.id, content: post.content, created_at: post.created_at, user: post.user.name}
+      new_array << {id: post.id, content: post.content, created_at: post.created_at, user: post.user.name, likes: post.likes.length}
     end
     render json: post_data
+  end
+
+  def show
+    
   end
 end

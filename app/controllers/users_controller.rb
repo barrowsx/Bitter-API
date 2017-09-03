@@ -8,7 +8,7 @@ class UsersController < ApplicationController
     end
     if !taken_names.include?(new_user.name)
       new_user.save
-      render json: {message: "User #{new_user.name} created."}, status: :ok
+      render json: new_user
     else
       render json: {message: "Couldn't create new user #{new_user.name}"}, status: :unauthorized
     end

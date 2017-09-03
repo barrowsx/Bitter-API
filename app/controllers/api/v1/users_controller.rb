@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
 
-  before_action :set_user, except: [:current_user_data, :following_posts]
+  before_action :set_user, except: [:current_user_data, :following_posts, :following, :followers]
 
   def current_user_data
     follower_count = current_user.followers.length
@@ -9,11 +9,18 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def following
-
+    array_to_return = current_user.following.map do |follow|
+      {name: follow.name, followers: follow.followers.length, following: follow.following.length}
+    end
+    # byebug
+    render json: array_to_return
   end
 
   def followers
-
+    array_to_return = current_user.followers.map do |follow|
+      {name: follow.name, followers: follow.followers.length, following: follow.following.length}
+    end
+    render json: array_to_return
   end
 
   def show
@@ -35,7 +42,11 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def posts
-    render json: @user.posts
+    posts = @user.posts
+    post_data = posts.each_with_object([]) do |post, new_array|
+      new_array << {id: post.id, content: post.content, created_at: post.created_at, user: post.user.name, likes: post.likes.length, user_id: @user.id}
+    end
+    render json: post_data
   end
 
   def following_posts
@@ -45,7 +56,7 @@ class Api::V1::UsersController < ApplicationController
       end
     end.flatten
     posts = posts.map do |post|
-      {id: post.id, content: post.content, created_at: post.created_at, user: post.user.name}
+      {id: post.id, content: post.content, created_at: post.created_at, user: post.user.name, likes: post.likes.length, user_id: post.user.id}
     end
     render json: posts
   end
