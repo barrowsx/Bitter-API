@@ -6,8 +6,8 @@ class ApplicationController < ActionController::API
   end
 
   def current_user
-    # byebug
-    if auth_present? && auth != nil
+    # File.open('whatisauth.txt', 'a') { |f| f.write(auth) }
+    if auth_present? && auth != nil && auth["user"] != nil
       user = User.find(auth["user"])
       if user
         @current_user ||= user
@@ -18,6 +18,7 @@ class ApplicationController < ActionController::API
   end
 
   def authenticate
+    # byebug
     render json: {error: "Unauthorized. Make sure you're logged in!"}, status: :unauthorized unless logged_in?
   end
 
