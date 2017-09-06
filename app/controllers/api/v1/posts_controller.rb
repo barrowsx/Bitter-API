@@ -3,6 +3,11 @@ require "google/cloud/language"
 class Api::V1::PostsController < ApplicationController
   # skip_before_action :authenticate
 
+  Google::Auth::ServiceAccountCredentials.make_creds(
+    scope: 'https://www.googleapis.com/auth/cloud-platform',
+    json_key_io: StringIO.new(ENV['GOOGLE_APPLICATION_CREDENTIALS'])
+  )
+
   def index
     @posts = Post.all.reverse
     post_data = @posts.each_with_object([]) do |post, new_array|
