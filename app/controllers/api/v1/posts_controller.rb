@@ -1,9 +1,15 @@
 require "google/cloud/language"
+require "googleauth"
 
 class Api::V1::PostsController < ApplicationController
   # skip_before_action :authenticate
 
-  authorization = Google::Auth.get_application_default('https://www.googleapis.com/auth/cloud-platform')
+  cred_io = StringIO.new(ENV['GOOGLE_APPLICATION_CREDENTIALS'])
+
+  Google::Auth::ServiceAccountCredentials.make_creds(
+    scope: 'https://www.googleapis.com/auth/cloud-platform',
+    json_key_io: cred_io
+  )
 
   def index
     @posts = Post.all.reverse
