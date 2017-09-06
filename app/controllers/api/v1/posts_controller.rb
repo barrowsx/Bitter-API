@@ -3,9 +3,11 @@ require "google/cloud/language"
 class Api::V1::PostsController < ApplicationController
   # skip_before_action :authenticate
 
+  cred_io = StringIO.new(ENV['GOOGLE_APPLICATION_CREDENTIALS'])
+
   Google::Auth::ServiceAccountCredentials.make_creds(
     scope: 'https://www.googleapis.com/auth/cloud-platform',
-    json_key_io: StringIO.new(ENV['GOOGLE_APPLICATION_CREDENTIALS'])
+    json_key_io: cred_io
   )
 
   def index
