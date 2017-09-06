@@ -4,13 +4,6 @@ require "googleauth"
 class Api::V1::PostsController < ApplicationController
   # skip_before_action :authenticate
 
-  cred_io = StringIO.new(ENV['GOOGLE_APPLICATION_CREDENTIALS'])
-
-  Google::Auth::ServiceAccountCredentials.make_creds(
-    scope: 'https://www.googleapis.com/auth/cloud-platform',
-    json_key_io: cred_io
-  )
-
   def index
     @posts = Post.all.reverse
     post_data = @posts.each_with_object([]) do |post, new_array|
@@ -20,6 +13,11 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def create
+    cred_io = StringIO.new(ENV['GOOGLE_APPLICATION_CREDENTIALS'])
+    Google::Auth::ServiceAccountCredentials.make_creds(
+      scope: 'https://www.googleapis.com/auth/cloud-platform',
+      json_key_io: cred_io
+    )
     language = Google::Cloud::Language.new project: ENV['BITTER_PROJECT_ID']
     document = language.document params[:user][:content]
     sentiment = document.sentiment
