@@ -13,7 +13,7 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def create
-    cred_io = StringIO.new(ENV['GOOGLE_APPLICATION_CREDENTIALS'])
+    cred_io = StringIO.new(ENV['GOOGLE_APPLICATION_JSON'])
     Google::Auth::ServiceAccountCredentials.make_creds(
       scope: 'https://www.googleapis.com/auth/cloud-platform',
       json_key_io: cred_io
