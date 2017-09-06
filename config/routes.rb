@@ -10,7 +10,11 @@ Rails.application.routes.draw do
       get '/users/current/followers', to: 'users#followers'
       resources :users, only: [:show, :update, :destroy]
       resources :posts
+      post '/posts/:id/like', to: 'posts#like_post'
+      get '/posts/:id/like', to: 'posts#load_post_likes'
       get '/users/:id/posts', to: 'users#posts'
+      post '/users/:id/follow', to: 'users#follow'
+      get '/users/:id/follow', to: 'users#is_following?'
     end
   end
 

@@ -10,7 +10,7 @@ class Api::V1::UsersController < ApplicationController
 
   def following
     array_to_return = current_user.following.map do |follow|
-      {name: follow.name, followers: follow.followers.length, following: follow.following.length}
+      {user_id: follow.id, name: follow.name, followers: follow.followers.length, following: follow.following.length}
     end
     # byebug
     render json: array_to_return
@@ -18,7 +18,7 @@ class Api::V1::UsersController < ApplicationController
 
   def followers
     array_to_return = current_user.followers.map do |follow|
-      {name: follow.name, followers: follow.followers.length, following: follow.following.length}
+      {user_id: follow.id, name: follow.name, followers: follow.followers.length, following: follow.following.length}
     end
     render json: array_to_return
   end
@@ -42,10 +42,10 @@ class Api::V1::UsersController < ApplicationController
   end
 
   def posts
-    posts = @user.posts
+    posts = @user.posts.reverse
     post_data = posts.each_with_object([]) do |post, new_array|
       new_array << {id: post.id, content: post.content, created_at: post.created_at, user: post.user.name, likes: post.likes.length, user_id: @user.id}
-    end
+    end.sort!{ |x, y| x[:id] <=> y[:id] }.reverse
     render json: post_data
   end
 
@@ -54,11 +54,28 @@ class Api::V1::UsersController < ApplicationController
       user.posts.map do |post|
         post
       end
-    end.flatten
+    end.flatten.sort!{ |x, y| x[:id] <=> y[:id] }.reverse
     posts = posts.map do |post|
       {id: post.id, content: post.content, created_at: post.created_at, user: post.user.name, likes: post.likes.length, user_id: post.user.id}
     end
     render json: posts
+  end
+
+  def follow
+    if current_user.id == @user.id
+      render json: {error: "wow, trying to follow yourself? that's pathetic, even for this website..."}, status: :unauthorized
+    elsif !current_user.following?(@user)
+      current_user.follow(@user)
+      render json: {relationship_made: true, name: @user.name, user_id: @user.id}, status: :ok
+    else
+      current_user.unfollow(@user)
+      render json: {relationship_made: false, name: @user.name, user_id: @user.id}, status: :ok
+    end
+  end
+
+  def is_following?
+    status = current_user.following?(@user)
+    render json: {relationship: status}, status: :ok
   end
 
   private

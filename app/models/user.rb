@@ -18,4 +18,21 @@ class User < ApplicationRecord
   def following?(other_user)
     following.include?(other_user)
   end
+
+  def like(post)
+    arr = likes.map do |like|
+      like.post
+    end
+    if arr.include?(post)
+      like_to_delete = Like.find_or_create_by(user_id: self.id, post_id: post.id)
+      likes.destroy(like_to_delete.id)
+    else
+      if self.id == post.user.id
+        
+      else
+        new_like = Like.create(user_id: self.id, post_id: post.id)
+        likes << new_like
+      end
+    end
+  end
 end
