@@ -13,11 +13,11 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def create
-    cred_io = StringIO.new(ENV['GOOGLE_APPLICATION_JSON'])
-    Google::Auth::ServiceAccountCredentials.make_creds(
-      scope: 'https://www.googleapis.com/auth/cloud-platform',
-      json_key_io: cred_io
-    )
+    # cred_io = StringIO.new(ENV['GOOGLE_APPLICATION_JSON'])
+    # Google::Auth::ServiceAccountCredentials.make_creds(
+    #   scope: 'https://www.googleapis.com/auth/cloud-platform',
+    #   json_key_io: cred_io
+    # )
     language = Google::Cloud::Language.new project: ENV['BITTER_PROJECT_ID']
     document = language.document params[:user][:content]
     sentiment = document.sentiment
