@@ -17,7 +17,7 @@ module ApplicationCable
     end
 
     def token
-      request.env["HTTP_AUTHORIZATION"].scan(/Bearer (.*)$/).flatten.last
+      request.params[:token]
     end
 
     def auth

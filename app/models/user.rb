@@ -6,6 +6,8 @@ class User < ApplicationRecord
   has_many :passive_relationships, class_name: "Relationship", foreign_key: "followed_id", dependent: :destroy
   has_many :following, through: :active_relationships, source: :followed
   has_many :followers, through: :passive_relationships
+  has_many :messages
+  has_many :chatrooms, through: :messages
 
   def follow(other_user)
     following << other_user
@@ -28,7 +30,7 @@ class User < ApplicationRecord
       likes.destroy(like_to_delete.id)
     else
       if self.id == post.user.id
-        
+
       else
         new_like = Like.create(user_id: self.id, post_id: post.id)
         likes << new_like
