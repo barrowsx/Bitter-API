@@ -6,5 +6,5 @@ test:
 
 production:
   adapter: redis
-  url: redis://localhost:6379/1
+  url: redis://redistogo:3cb969dd13a12c7d3410ecfce7b54dbf@tarpon.redistogo.com:9635/
   channel_prefix: bitter-api_production
