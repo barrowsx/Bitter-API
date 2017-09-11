@@ -1,6 +1,6 @@
 class Api::V1::UsersController < ApplicationController
 
-  before_action :set_user, except: [:current_user_data, :following_posts, :following, :followers]
+  before_action :set_user, except: [:current_user_data, :following_posts, :following, :followers, :show_by_username]
 
   def current_user_data
     follower_count = current_user.followers.length
@@ -27,6 +27,14 @@ class Api::V1::UsersController < ApplicationController
     follower_count = @user.followers.length
     following_count = @user.following.length
     render json: {id: @user.id, name: @user.name, followers: follower_count, following: following_count}
+  end
+
+  def show_by_username
+    # byebug
+    user = User.find_by(name: params[:username])
+    follower_count = user.followers.length
+    following_count = user.following.length
+    render json: {id: user.id, name: user.name, followers: follower_count, following: following_count}
   end
 
   def update

@@ -15,6 +15,7 @@ Rails.application.routes.draw do
       get '/users/:id/posts', to: 'users#posts'
       post '/users/:id/follow', to: 'users#follow'
       get '/users/:id/follow', to: 'users#is_following?'
+      get '/:username', to: 'users#show_by_username'
     end
   end
 
