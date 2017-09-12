@@ -62,7 +62,9 @@ class Api::V1::UsersController < ApplicationController
       user.posts.map do |post|
         post
       end
-    end.flatten.sort!{ |x, y| x[:id] <=> y[:id] }.reverse
+    end
+    posts << current_user.posts
+    posts.flatten!.sort!{ |x, y| x[:id] <=> y[:id]}.reverse!
     posts = posts.map do |post|
       {id: post.id, content: post.content, created_at: post.created_at, user: post.user.name, likes: post.likes.length, user_id: post.user.id}
     end
